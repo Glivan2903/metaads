@@ -12,9 +12,11 @@ import {
   LineChart,
   Target,
   Bell,
-  LayoutDashboard
+  LayoutDashboard,
+  Menu
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 interface SidebarItemProps {
   icon: React.ElementType;
@@ -46,8 +48,10 @@ const SidebarItem = ({ icon: Icon, label, href, isCollapsed }: SidebarItemProps)
 export function DashboardSidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const { user } = useAuth();
+  const [openMobile, setOpenMobile] = useState(false);
   
-  return (
+  // Sidebar para desktop
+  const sidebarContent = (
     <div
       className={cn(
         "flex flex-col border-r bg-background h-screen sticky top-0 transition-all duration-300",
@@ -112,6 +116,28 @@ export function DashboardSidebar() {
         </Button>
       </div>
     </div>
+  );
+
+  return (
+    <>
+      {/* Sidebar para desktop */}
+      <div className="hidden md:flex">
+        {sidebarContent}
+      </div>
+      {/* Botão e Drawer para mobile */}
+      <div className="md:hidden">
+        <Sheet open={openMobile} onOpenChange={setOpenMobile}>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon" className="m-2">
+              <Menu />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="p-0 w-[240px]">
+            {sidebarContent}
+          </SheetContent>
+        </Sheet>
+      </div>
+    </>
   );
 }
 

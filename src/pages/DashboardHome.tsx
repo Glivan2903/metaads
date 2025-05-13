@@ -17,114 +17,7 @@ import { DateRangePicker } from "@/components/DateRangePicker";
 import { addDays, format, subDays } from "date-fns";
 import { toast } from "@/hooks/use-toast";
 import { DateRange } from "react-day-picker";
-
-// Sample data for charts
-const performanceData = [
-  { name: "01/05", impressions: 34000, clicks: 2400, conversions: 240 },
-  { name: "02/05", impressions: 42000, clicks: 2800, conversions: 310 },
-  { name: "03/05", impressions: 38000, clicks: 2100, conversions: 250 },
-  { name: "04/05", impressions: 45000, clicks: 3200, conversions: 380 },
-  { name: "05/05", impressions: 50000, clicks: 3800, conversions: 450 },
-  { name: "06/05", impressions: 47000, clicks: 3600, conversions: 420 },
-  { name: "07/05", impressions: 52000, clicks: 4200, conversions: 520 },
-  { name: "08/05", impressions: 54000, clicks: 4500, conversions: 580 },
-  { name: "09/05", impressions: 58000, clicks: 4800, conversions: 620 },
-  { name: "10/05", impressions: 61000, clicks: 5100, conversions: 670 },
-  { name: "11/05", impressions: 59000, clicks: 4900, conversions: 640 },
-  { name: "12/05", impressions: 63000, clicks: 5300, conversions: 690 },
-  { name: "13/05", impressions: 65000, clicks: 5600, conversions: 720 },
-  { name: "14/05", impressions: 68000, clicks: 6000, conversions: 780 },
-];
-
-const costData = [
-  { name: "Google", value: 35000, color: "#4285F4" },
-  { name: "Facebook", value: 28000, color: "#1877F2" },
-  { name: "Instagram", value: 22000, color: "#E1306C" },
-  { name: "LinkedIn", value: 15000, color: "#0077B5" },
-  { name: "TikTok", value: 10000, color: "#000000" },
-];
-
-const conversionsByChannelData = [
-  { name: "Google", conversions: 420, cpa: 83.3 },
-  { name: "Facebook", conversions: 350, cpa: 80 },
-  { name: "Instagram", conversions: 280, cpa: 78.6 },
-  { name: "LinkedIn", conversions: 180, cpa: 83.3 },
-  { name: "TikTok", conversions: 120, cpa: 83.3 },
-];
-
-// Sample data for campaigns
-const sampleCampaigns: Campaign[] = [
-  {
-    id: "1",
-    name: "Campanha Black Friday",
-    status: "ativa",
-    platform: "Google Ads",
-    budget: 50000,
-    spent: 42500,
-    impressions: 580000,
-    clicks: 32000,
-    conversions: 3200,
-    ctr: 0.0552,
-    cpc: 1.33,
-    cpa: 13.28,
-  },
-  {
-    id: "2",
-    name: "Remarketing Clientes",
-    status: "ativa",
-    platform: "Facebook Ads",
-    budget: 30000,
-    spent: 18500,
-    impressions: 420000,
-    clicks: 25800,
-    conversions: 2150,
-    ctr: 0.0614,
-    cpc: 0.72,
-    cpa: 8.60,
-  },
-  {
-    id: "3",
-    name: "Lançamento Produto X",
-    status: "pausada",
-    platform: "Instagram Ads",
-    budget: 45000,
-    spent: 25800,
-    impressions: 380000,
-    clicks: 22400,
-    conversions: 1860,
-    ctr: 0.0589,
-    cpc: 1.15,
-    cpa: 13.87,
-  },
-  {
-    id: "4",
-    name: "Campanha Lead B2B",
-    status: "encerrada",
-    platform: "LinkedIn Ads",
-    budget: 25000,
-    spent: 25000,
-    impressions: 180000,
-    clicks: 9600,
-    conversions: 480,
-    ctr: 0.0533,
-    cpc: 2.60,
-    cpa: 52.08,
-  },
-  {
-    id: "5",
-    name: "Awareness Gen Z",
-    status: "planejada",
-    platform: "TikTok Ads",
-    budget: 20000,
-    spent: 0,
-    impressions: 0,
-    clicks: 0,
-    conversions: 0,
-    ctr: 0,
-    cpc: 0,
-    cpa: 0,
-  },
-];
+import { useNavigate } from "react-router-dom";
 
 export function DashboardHome() {
   const [period, setPeriod] = useState("14d");
@@ -133,17 +26,32 @@ export function DashboardHome() {
     from: subDays(new Date(), 14),
     to: new Date(),
   });
-  const [filteredCampaigns, setFilteredCampaigns] = useState<Campaign[]>(sampleCampaigns);
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [filteredCampaigns, setFilteredCampaigns] = useState<Campaign[]>([]);
 
-  // Filter campaigns based on selection
+  // Buscar campanhas reais da integração ao carregar a página
+  useEffect(() => {
+    // Buscar do localStorage, contexto global, ou API, conforme implementado na página de campanhas
+    // Exemplo usando localStorage:
+    // const storedCampaigns = localStorage.getItem('campaigns');
+    // if (storedCampaigns) {
+    //   const parsed = JSON.parse(storedCampaigns);
+    //   setCampaigns(parsed);
+    //   setFilteredCampaigns(parsed);
+    // }
+    // Ou, se houver um contexto global:
+    // setCampaigns(contextCampaigns);
+    // setFilteredCampaigns(contextCampaigns);
+  }, []);
+
+  // Filtrar campanhas conforme seleção
   useEffect(() => {
     if (selectedCampaign === "all") {
-      setFilteredCampaigns(sampleCampaigns);
+      setFilteredCampaigns(campaigns);
     } else {
-      const filtered = sampleCampaigns.filter(campaign => campaign.id === selectedCampaign);
-      setFilteredCampaigns(filtered);
+      setFilteredCampaigns(campaigns.filter(c => c.id === selectedCampaign));
     }
-  }, [selectedCampaign]);
+  }, [selectedCampaign, campaigns]);
 
   // Handle date range change
   useEffect(() => {
@@ -189,13 +97,13 @@ export function DashboardHome() {
     }
   };
   
-  const totalClicks = filteredCampaigns.reduce((sum, item) => sum + item.clicks, 0);
-  const totalImpressions = filteredCampaigns.reduce((sum, item) => sum + item.impressions, 0);
-  const totalConversions = filteredCampaigns.reduce((sum, item) => sum + item.conversions, 0);
-  const totalSpent = filteredCampaigns.reduce((sum, campaign) => sum + campaign.spent, 0);
-  const totalBudget = filteredCampaigns.reduce((sum, campaign) => sum + campaign.budget, 0);
-  const averageCTR = totalClicks / totalImpressions || 0;
-  const averageCPA = totalSpent / totalConversions || 0;
+  const totalClicks = filteredCampaigns.reduce((sum, item) => sum + (item.clicks || 0), 0);
+  const totalImpressions = filteredCampaigns.reduce((sum, item) => sum + (item.impressions || 0), 0);
+  const totalConversions = filteredCampaigns.reduce((sum, item) => sum + (item.conversions || 0), 0);
+  const totalSpent = filteredCampaigns.reduce((sum, campaign) => sum + (campaign.spent || 0), 0);
+  const totalBudget = filteredCampaigns.reduce((sum, campaign) => sum + (campaign.budget || 0), 0);
+  const averageCTR = totalImpressions ? totalClicks / totalImpressions : 0;
+  const averageCPA = totalConversions ? totalSpent / totalConversions : 0;
   
   return (
     <div className="space-y-6">
@@ -223,7 +131,8 @@ export function DashboardHome() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Todas as campanhas</SelectItem>
-              {sampleCampaigns.map((campaign) => (
+              {/* Renderização condicional para campanhas reais */}
+              {filteredCampaigns.map((campaign) => (
                 <SelectItem key={campaign.id} value={campaign.id}>
                   {campaign.name}
                 </SelectItem>
@@ -287,7 +196,7 @@ export function DashboardHome() {
           <LineChartComponent
             title="Desempenho da Campanha"
             description="Impressões, cliques e conversões nos últimos 14 dias"
-            data={performanceData}
+            data={[]}
             lines={[
               { dataKey: "impressions", stroke: "#3b82f6", name: "Impressões" },
               { dataKey: "clicks", stroke: "#10b981", name: "Cliques" },
@@ -301,7 +210,7 @@ export function DashboardHome() {
           <PieChartComponent
             title="Distribuição de Investimento"
             description="Investimento por plataforma"
-            data={costData}
+            data={[]}
             height={350}
           />
         </div>
@@ -316,7 +225,11 @@ export function DashboardHome() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <CampaignTable campaigns={filteredCampaigns.length > 0 ? filteredCampaigns : sampleCampaigns} />
+            {filteredCampaigns.length === 0 ? (
+              <div className="text-center text-muted-foreground py-8">Nenhum dado disponível</div>
+            ) : (
+              <CampaignTable campaigns={filteredCampaigns} />
+            )}
           </CardContent>
         </Card>
       </div>
@@ -325,7 +238,7 @@ export function DashboardHome() {
         <BarChartComponent
           title="Conversões por Canal"
           description="Total de conversões por plataforma de anúncio"
-          data={conversionsByChannelData}
+          data={[]}
           bars={[
             { dataKey: "conversions", fill: "#3b82f6", name: "Conversões" },
             { dataKey: "cpa", fill: "#f59e0b", name: "CPA (R$)" },

@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import CampaignTable, { Campaign } from "@/components/CampaignTable";
@@ -11,122 +10,6 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 
-// Sample data for campaigns
-const sampleCampaigns: Campaign[] = [
-  {
-    id: "1",
-    name: "Campanha Black Friday",
-    status: "ativa",
-    platform: "Google Ads",
-    budget: 50000,
-    spent: 42500,
-    impressions: 580000,
-    clicks: 32000,
-    conversions: 3200,
-    ctr: 0.0552,
-    cpc: 1.33,
-    cpa: 13.28,
-  },
-  {
-    id: "2",
-    name: "Remarketing Clientes",
-    status: "ativa",
-    platform: "Facebook Ads",
-    budget: 30000,
-    spent: 18500,
-    impressions: 420000,
-    clicks: 25800,
-    conversions: 2150,
-    ctr: 0.0614,
-    cpc: 0.72,
-    cpa: 8.60,
-  },
-  {
-    id: "3",
-    name: "Lançamento Produto X",
-    status: "pausada",
-    platform: "Instagram Ads",
-    budget: 45000,
-    spent: 25800,
-    impressions: 380000,
-    clicks: 22400,
-    conversions: 1860,
-    ctr: 0.0589,
-    cpc: 1.15,
-    cpa: 13.87,
-  },
-  {
-    id: "4",
-    name: "Campanha Lead B2B",
-    status: "encerrada",
-    platform: "LinkedIn Ads",
-    budget: 25000,
-    spent: 25000,
-    impressions: 180000,
-    clicks: 9600,
-    conversions: 480,
-    ctr: 0.0533,
-    cpc: 2.60,
-    cpa: 52.08,
-  },
-  {
-    id: "5",
-    name: "Awareness Gen Z",
-    status: "planejada",
-    platform: "TikTok Ads",
-    budget: 20000,
-    spent: 0,
-    impressions: 0,
-    clicks: 0,
-    conversions: 0,
-    ctr: 0,
-    cpc: 0,
-    cpa: 0,
-  },
-  {
-    id: "6",
-    name: "Campanha Natal",
-    status: "planejada",
-    platform: "Google Ads",
-    budget: 60000,
-    spent: 0,
-    impressions: 0,
-    clicks: 0,
-    conversions: 0,
-    ctr: 0,
-    cpc: 0,
-    cpa: 0,
-  },
-  {
-    id: "7",
-    name: "Promoção Frete Grátis",
-    status: "ativa",
-    platform: "Facebook Ads",
-    budget: 15000,
-    spent: 8700,
-    impressions: 210000,
-    clicks: 14500,
-    conversions: 1250,
-    ctr: 0.0690,
-    cpc: 0.60,
-    cpa: 6.96,
-  },
-  {
-    id: "8",
-    name: "Campanha Moda Verão",
-    status: "pausada",
-    platform: "Instagram Ads",
-    budget: 35000,
-    spent: 12500,
-    impressions: 180000,
-    clicks: 10800,
-    conversions: 920,
-    ctr: 0.0600,
-    cpc: 1.16,
-    cpa: 13.59,
-  },
-];
-
 // Types for campaign form
 type CampaignFormData = {
   name: string;
@@ -137,7 +20,7 @@ type CampaignFormData = {
 
 export function CampaignsPage() {
   const { toast } = useToast();
-  const [campaigns, setCampaigns] = useState<Campaign[]>(sampleCampaigns);
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [isNewCampaignOpen, setIsNewCampaignOpen] = useState(false);
   const [formData, setFormData] = useState<CampaignFormData>({
     name: "",
@@ -149,6 +32,12 @@ export function CampaignsPage() {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [campaignToDelete, setCampaignToDelete] = useState<string | null>(null);
   
+  // Buscar campanhas reais da integração ao carregar a página
+  useEffect(() => {
+    // Exemplo:
+    // fetchCampaigns().then(setCampaigns);
+  }, []);
+
   // Handlers for campaign actions
   const handleViewDetails = (campaignId: string) => {
     const campaign = campaigns.find(c => c.id === campaignId);
@@ -398,13 +287,17 @@ export function CampaignsPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <CampaignTable 
-            campaigns={campaigns} 
-            onViewDetails={handleViewDetails}
-            onEditCampaign={handleEditCampaign}
-            onDuplicateCampaign={handleDuplicateCampaign}
-            onDeleteCampaign={handleDeleteCampaign}
-          />
+          {campaigns.length === 0 ? (
+            <div className="text-center text-muted-foreground py-8">Nenhuma campanha disponível</div>
+          ) : (
+            <CampaignTable 
+              campaigns={campaigns} 
+              onViewDetails={handleViewDetails}
+              onEditCampaign={handleEditCampaign}
+              onDuplicateCampaign={handleDuplicateCampaign}
+              onDeleteCampaign={handleDeleteCampaign}
+            />
+          )}
         </CardContent>
       </Card>
 

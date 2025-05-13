@@ -29,16 +29,16 @@ export function DashboardHeader() {
   };
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-background px-4 md:px-6">
-      <div className="flex items-center gap-2">
-        <div className="font-semibold text-lg md:text-xl tracking-tight">
+    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-background px-2 sm:px-4 md:px-6">
+      <div className="flex items-center gap-1 sm:gap-2">
+        <div className="font-semibold text-base sm:text-lg md:text-xl tracking-tight truncate max-w-[120px] sm:max-w-xs md:max-w-none">
           Dashboard de Métricas
         </div>
       </div>
       
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1 sm:gap-2">
         {searchOpen ? (
-          <div className="relative md:w-64">
+          <div className="relative w-32 sm:w-48 md:w-64">
             <Input
               placeholder="Pesquisar..."
               className="w-full"
