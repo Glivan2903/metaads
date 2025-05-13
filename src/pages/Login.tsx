@@ -8,8 +8,8 @@ import { Moon, Sun } from "lucide-react";
 import { useTheme } from "@/hooks/use-theme";
 
 const Login = () => {
-  const [email, setEmail] = useState("conectajuse@gmail.com");
-  const [password, setPassword] = useState("123456");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { signIn } = useAuth();
   const { theme, setTheme } = useTheme();
